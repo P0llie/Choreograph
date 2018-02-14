@@ -2,8 +2,8 @@
 //  DocumentBrowserViewController.swift
 //  Choreograph
 //
-//  Created by Karen McCarthy on 21/01/2018.
-//  Copyright © 2018 Karen McCarthy. All rights reserved.
+//  Created by Karen Worgan on 21/01/2018.
+//  Copyright © 2018 Karen Worgan. All rights reserved.
 //
 
 import UIKit
@@ -12,35 +12,45 @@ import UIKit
 class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocumentBrowserViewControllerDelegate {
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
+        super.viewDidLoad()        
         delegate = self
-        
-        allowsDocumentCreation = true
         allowsPickingMultipleItems = false
+        allowsDocumentCreation = false
+        templateURL = try? FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Untitled.choreograph")
+        
+        if templateURL != nil {
+         let docData = NSKeyedArchiver.archivedData(withRootObject: self.chorArray)
+            allowsDocumentCreation = FileManager.default.createFile(atPath: templateURL!.path, contents: docData, attributes: nil) 
+//            allowsDocumentCreation = true
+            print ("allows Document creation = \(allowsDocumentCreation)")
+            print ("created url at \( templateURL!.path)")
+            
+        }
         
         // Update the style of the UIDocumentBrowserViewController
-        // browserUserInterfaceStyle = .dark
-        // view.tintColor = .white
+         browserUserInterfaceStyle = .dark
+         view.tintColor = .purple
         
         // Specify the allowed content types of your application via the Info.plist.
         
         // Do any additional setup after loading the view, typically from a nib.
     }
+    // Mark: new file template
     
-    
+    var templateURL: URL?
+    var chorArray: [CountSteps] = Array(repeating: Constants.MyCS, count: Constants.InitialRows)
+//    var chorArray = [CountSteps]()
+    private struct Constants {
+        static let MyCS = CountSteps(counts:" ", steps:" " )
+        static let InitialRows = 10
+    }
     // MARK: UIDocumentBrowserViewControllerDelegate
     
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didRequestDocumentCreationWithHandler importHandler: @escaping (URL?, UIDocumentBrowserViewController.ImportMode) -> Void) {
-        let newDocumentURL: URL? = nil
         
-        // Set the URL for the new document here. Optionally, you can present a template chooser before calling the importHandler.
-        // Make sure the importHandler is always called, even if the user cancels the creation request.
-        if newDocumentURL != nil {
-            importHandler(newDocumentURL, .move)
-        } else {
-            importHandler(nil, .none)
-        }
+            importHandler(templateURL, .copy)
     }
     
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentURLs documentURLs: [URL]) {
@@ -57,6 +67,8 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     }
     
     func documentBrowser(_ controller: UIDocumentBrowserViewController, failedToImportDocumentAt documentURL: URL, error: Error?) {
+        
+        print ("Failed to import document at \(documentURL). Error code \(error!)")
         // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
     }
     
@@ -65,10 +77,22 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     func presentDocument(at documentURL: URL) {
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let documentViewController = storyBoard.instantiateViewController(withIdentifier: "DocumentViewController") as! DocumentViewController
-        documentViewController.document = Document(fileURL: documentURL)
-        
-        present(documentViewController, animated: true, completion: nil)
+        let documentVC = storyBoard.instantiateViewController(withIdentifier: "DocumentMVC") 
+        if let documentViewController = documentVC.contents as? DocumentViewController {
+            func setInitialText(_ success:Bool) {
+                if success {
+                    print ("initialised a new file ")
+                } else {
+                    print ( "File Initialisation failed")
+                }
+            }
+            documentViewController.danceDoc = ChoreographyDocument(fileURL: documentURL)
+            documentViewController.danceDoc?.save(to:(documentViewController.danceDoc?.fileURL)!, for: .forCreating, completionHandler: setInitialText)
+            
+            documentViewController.documentURL = documentURL
+            print ("Document URL = \( documentURL)")
+        }
+        present(documentVC, animated: true, completion: nil)
     }
 }
 

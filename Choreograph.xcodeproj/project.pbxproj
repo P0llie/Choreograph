@@ -9,13 +9,17 @@
 /* Begin PBXBuildFile section */
 		893CB71F20153C5A00CFDE29 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB71E20153C5A00CFDE29 /* AppDelegate.swift */; };
 		893CB72120153C5A00CFDE29 /* DocumentBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB72020153C5A00CFDE29 /* DocumentBrowserViewController.swift */; };
-		893CB72320153C5A00CFDE29 /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB72220153C5A00CFDE29 /* DocumentViewController.swift */; };
-		893CB72520153C5A00CFDE29 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB72420153C5A00CFDE29 /* Document.swift */; };
 		893CB72820153C5A00CFDE29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 893CB72620153C5A00CFDE29 /* Main.storyboard */; };
 		893CB72A20153C5A00CFDE29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 893CB72920153C5A00CFDE29 /* Assets.xcassets */; };
 		893CB72D20153C5A00CFDE29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 893CB72B20153C5A00CFDE29 /* LaunchScreen.storyboard */; };
 		893CB73820153C5A00CFDE29 /* ChoreographTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB73720153C5A00CFDE29 /* ChoreographTests.swift */; };
 		893CB74320153C5B00CFDE29 /* ChoreographUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CB74220153C5B00CFDE29 /* ChoreographUITests.swift */; };
+		89C0238C2018F20F00184354 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0238B2018F20F00184354 /* Utilities.swift */; };
+		89DBAC002018BF2900161F12 /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DBABFF2018BF2900161F12 /* DocumentViewController.swift */; };
+		89DBAC022018BF7A00161F12 /* PrintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DBAC012018BF7A00161F12 /* PrintViewController.swift */; };
+		89DBAC042018BF8500161F12 /* ChorDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DBAC032018BF8500161F12 /* ChorDocument.swift */; };
+		89DBAC062018BF8F00161F12 /* ChoreoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DBAC052018BF8F00161F12 /* ChoreoCell.swift */; };
+		89DBAC082018BF9E00161F12 /* CountSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DBAC072018BF9E00161F12 /* CountSteps.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,8 +43,6 @@
 		893CB71B20153C5A00CFDE29 /* Choreograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Choreograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		893CB71E20153C5A00CFDE29 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		893CB72020153C5A00CFDE29 /* DocumentBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentBrowserViewController.swift; sourceTree = "<group>"; };
-		893CB72220153C5A00CFDE29 /* DocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentViewController.swift; sourceTree = "<group>"; };
-		893CB72420153C5A00CFDE29 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		893CB72720153C5A00CFDE29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		893CB72920153C5A00CFDE29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		893CB72C20153C5A00CFDE29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -51,6 +53,12 @@
 		893CB73E20153C5B00CFDE29 /* ChoreographUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChoreographUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		893CB74220153C5B00CFDE29 /* ChoreographUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoreographUITests.swift; sourceTree = "<group>"; };
 		893CB74420153C5B00CFDE29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		89C0238B2018F20F00184354 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		89DBABFF2018BF2900161F12 /* DocumentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentViewController.swift; sourceTree = "<group>"; };
+		89DBAC012018BF7A00161F12 /* PrintViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintViewController.swift; sourceTree = "<group>"; };
+		89DBAC032018BF8500161F12 /* ChorDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChorDocument.swift; sourceTree = "<group>"; };
+		89DBAC052018BF8F00161F12 /* ChoreoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChoreoCell.swift; sourceTree = "<group>"; };
+		89DBAC072018BF9E00161F12 /* CountSteps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountSteps.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,8 +111,12 @@
 			children = (
 				893CB71E20153C5A00CFDE29 /* AppDelegate.swift */,
 				893CB72020153C5A00CFDE29 /* DocumentBrowserViewController.swift */,
-				893CB72220153C5A00CFDE29 /* DocumentViewController.swift */,
-				893CB72420153C5A00CFDE29 /* Document.swift */,
+				89DBABFF2018BF2900161F12 /* DocumentViewController.swift */,
+				89DBAC052018BF8F00161F12 /* ChoreoCell.swift */,
+				89DBAC032018BF8500161F12 /* ChorDocument.swift */,
+				89DBAC072018BF9E00161F12 /* CountSteps.swift */,
+				89DBAC012018BF7A00161F12 /* PrintViewController.swift */,
+				89C0238B2018F20F00184354 /* Utilities.swift */,
 				893CB72620153C5A00CFDE29 /* Main.storyboard */,
 				893CB72920153C5A00CFDE29 /* Assets.xcassets */,
 				893CB72B20153C5A00CFDE29 /* LaunchScreen.storyboard */,
@@ -265,9 +277,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				893CB72520153C5A00CFDE29 /* Document.swift in Sources */,
-				893CB72320153C5A00CFDE29 /* DocumentViewController.swift in Sources */,
+				89DBAC002018BF2900161F12 /* DocumentViewController.swift in Sources */,
+				89DBAC062018BF8F00161F12 /* ChoreoCell.swift in Sources */,
+				89DBAC082018BF9E00161F12 /* CountSteps.swift in Sources */,
+				89DBAC042018BF8500161F12 /* ChorDocument.swift in Sources */,
 				893CB72120153C5A00CFDE29 /* DocumentBrowserViewController.swift in Sources */,
+				89DBAC022018BF7A00161F12 /* PrintViewController.swift in Sources */,
+				89C0238C2018F20F00184354 /* Utilities.swift in Sources */,
 				893CB71F20153C5A00CFDE29 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,7 +457,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Newbroom.Choreograph;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -456,7 +472,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Newbroom.Choreograph;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
