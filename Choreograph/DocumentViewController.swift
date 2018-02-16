@@ -27,38 +27,17 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // open the chosen file
-/*        let fm = FileManager.default
-        self.danceDoc = ChoreographyDocument(fileURL: self.documentURL!)
-        func setInitialText(_ success:Bool) {
+        danceDoc?.open { success in
             if success {
-                print ("initialising a new file ")
-            } else {
-                print ( "File Initialisation failed")
+                print ("opened document \(String(describing: self.danceDoc?.localizedName))")
+                self.choreography = (self.danceDoc?.choreography)!
+                self.title = self.danceDoc?.localizedName
+            } else  {
+                print("Error opening a file")
+                dump(DocumentViewController.self)
+                fatalError()
             }
         }
-        if !fm.fileExists(atPath: (self.documentURL?.path)!) {
-            let myCountSteps = CountSteps(counts:" ", steps:" " )
-            for _ in 0...Storyboard.InitialRows-1 {
-                self.choreography.append(myCountSteps)
-                self.danceDoc?.choreography.append(myCountSteps)
-            }
-            self.danceDoc?.save(to:(self.danceDoc?.fileURL)!, for: .forCreating, completionHandler: setInitialText)
-        } else {
-            func listChoreography(_ success:Bool) {
-                if success {
-                    self.choreography = (self.danceDoc?.choreography)!
-                    print ("opened the document")
-                    print ( "Number of rows = \(self.choreography.count)" )
-                }else {
-                    print("error opening document")
-                    fatalError()
-                }
-            }
-            self.danceDoc?.open(completionHandler: listChoreography)
-        } */
-        self.title = self.danceDoc?.localizedName
-       
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,38 +47,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 450
         self.navigationItem.rightBarButtonItem = self.editButtonItem
-        danceDoc?.open { success in
-            if success {
-                print ("opened document \(String(describing: self.danceDoc?.localizedName))")
-                func setInitialText(_ success:Bool) {
-                    if success {
-                        print ("initialising a new file ")
-                    } else {
-                        print ( "File Initialisation failed")
-                    }
-                }
-                if self.danceDoc?.choreography.count == 0 {
-                    let myCountSteps = CountSteps(counts:" ", steps:" " )
-                    for _ in 0...Storyboard.InitialRows-1 {
-                        self.choreography.append(myCountSteps)
-                        self.danceDoc?.choreography.append(myCountSteps)
-                    }
-                    self.danceDoc?.save(to:(self.danceDoc?.fileURL)!, for: .forCreating, completionHandler: setInitialText)
-                    
-                } else {
-                    
-                    self.choreography = (self.danceDoc?.choreography)!
-                    print ("opened a previously edited document ")
-                }
-                
-                self.title = self.danceDoc?.localizedName
-                
-            } else  {
-                print("Error opening a file")
-                dump(DocumentViewController.self)
-                fatalError()
-            }
-        }
+
     }
     
     override func viewDidDisappear(_ animated: Bool) {
