@@ -21,12 +21,10 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
             in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Untitled.choreograph")
         
         if templateURL != nil {
-         let docData = NSKeyedArchiver.archivedData(withRootObject: self.chorArray)
-            allowsDocumentCreation = FileManager.default.createFile(atPath: templateURL!.path, contents: docData, attributes: nil) 
-//            allowsDocumentCreation = true
+            let docData = NSKeyedArchiver.archivedData(withRootObject: self.chorArray)
+            allowsDocumentCreation = FileManager.default.createFile(atPath: templateURL!.path, contents: docData, attributes: nil)
             print ("allows Document creation = \(allowsDocumentCreation)")
             print ("created url at \( templateURL!.path)")
-            
         }
         
         // Update the style of the UIDocumentBrowserViewController
@@ -34,8 +32,6 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
          view.tintColor = .purple
         
         // Specify the allowed content types of your application via the Info.plist.
-        
-        // Do any additional setup after loading the view, typically from a nib.
     }
     // Mark: new file template
     
@@ -79,16 +75,8 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let documentVC = storyBoard.instantiateViewController(withIdentifier: "DocumentMVC") 
         if let documentViewController = documentVC.contents as? DocumentViewController {
-            func setInitialText(_ success:Bool) {
-                if success {
-                    print ("initialised a new file ")
-                } else {
-                    print ( "File Initialisation failed")
-                }
-            }
-            documentViewController.danceDoc = ChoreographyDocument(fileURL: documentURL)
-            documentViewController.danceDoc?.save(to:(documentViewController.danceDoc?.fileURL)!, for: .forCreating, completionHandler: setInitialText)
             
+            documentViewController.danceDoc = ChoreographyDocument(fileURL: documentURL)            
             documentViewController.documentURL = documentURL
             print ("Document URL = \( documentURL)")
         }

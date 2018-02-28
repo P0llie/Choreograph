@@ -11,6 +11,7 @@ import UIKit
 
 class ChoreographyDocument: UIDocument {
     var choreography = [CountSteps]()
+    var thumbnail: UIImage?  //thumbnail image for this document
    
     override func load(fromContents contents: Any, ofType typeName: String?) throws {
                     if let chorData = contents as? Data {
@@ -24,6 +25,16 @@ class ChoreographyDocument: UIDocument {
     override func contents(forType typeName: String) throws -> Any {
         let docData = NSKeyedArchiver.archivedData(withRootObject: self.choreography)
         return docData
-    }        
+    }
+    
+    override func fileAttributesToWrite(to url: URL, for saveOperation: UIDocumentSaveOperation) throws -> [AnyHashable : Any] {
+        var attributes = try super.fileAttributesToWrite(to: url, for: saveOperation)
+        if let thumbnail = self.thumbnail {
+            attributes[URLResourceKey.thumbnailDictionaryKey] = [URLThumbnailDictionaryItem.NSThumbnail1024x1024SizeKey: thumbnail]
+        }
+        return attributes
+    }
 }
+
+
 

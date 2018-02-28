@@ -17,6 +17,10 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     var danceDoc: ChoreographyDocument?
     var choreography: [CountSteps] = [] {
         didSet {
+            danceDoc?.choreography = choreography
+            if danceDoc?.choreography != nil {
+                danceDoc?.updateChangeCount(.done)
+            }
             tableView.reloadData()
         }
     }
@@ -30,6 +34,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         danceDoc?.open { success in
             if success {
                 print ("opened document \(String(describing: self.danceDoc?.localizedName))")
+                print ("no. of elements in doc array = \(String(describing: self.danceDoc?.choreography.count))")
                 self.choreography = (self.danceDoc?.choreography)!
                 self.title = self.danceDoc?.localizedName
             } else  {
@@ -45,7 +50,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         
         checkForMusicLibraryAccess()
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 450
+        tableView.estimatedRowHeight = 500
         self.navigationItem.rightBarButtonItem = self.editButtonItem
 
     }
@@ -142,7 +147,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Counts \t\t Steps"
+        return "Counts\t\tSteps"
     }
 
     
@@ -193,6 +198,9 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     
     
     @IBAction func close(_ sender: UIBarButtonItem) {
+        if danceDoc?.choreography != nil {
+           danceDoc?.thumbnail = self.view.snapshot
+        }
         saveEdits()
         dismiss(animated: true) {
             self.danceDoc?.close()
@@ -204,9 +212,11 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     var myURL:URL? = nil
     var myLabelText: String = ""
     var trackTime = 0.0
-    
+    var startTime = 0.0
     var mediaItemCollection:MPMediaItemCollection? = nil
-    let player = MPMusicPlayerController.applicationMusicPlayer
+    let player = MPMusicPlayerController.applicationQueuePlayer
+    private weak var timer: Timer?
+    
     
 // MARK Outlets
     
@@ -326,7 +336,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         self.trackLengthLabel.title = convertSeceondsToMinutes(myItem.playbackDuration, label: timeLabel)
         self.mediaItemCollection = mediaItemCollection
         self.player.setQueue(with:self.mediaItemCollection!)
-
+        self.player.repeatMode = .one
         self.player.stop()
         self.dismiss(animated: true)
     }
@@ -345,31 +355,24 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
     @IBAction func chooseStartPosition(_ sender: UISlider) {
         self.player.pause()
+        self.playPauseButton.title = TitlesForButtons.pauseString
         self.player.currentPlaybackTime = Double(self.startTimeSlider.value)*self.trackTime
         let startLabel = "Track Start Time: "
         self.trackStartLabel.title = convertSeceondsToMinutes(self.player.currentPlaybackTime, label: startLabel)
-        if self.playPauseButton.title == TitlesForButtons.pauseString {
-            self.playPauseButton.title = TitlesForButtons.playString
-        }
-        
+        self.playPauseButton.title = TitlesForButtons.playString
     }
 // MARK bar button actions
     @IBAction func startMusic(_ sender: UIBarButtonItem) {
-        if (sender.title  == TitlesForButtons.stopString ) {
-            self.player.stop()            
-            self.playPauseButton.title  = TitlesForButtons.playString
-            self.trackStartLabel.title = "Track Start Time: 0:00"
-            self.startTimeSlider.value = 0.0
-            self.trackInfoLabel.title =  " "
-            self.trackLengthLabel.title = "TrackLength:0.00"
-        }
         if (sender.title  == TitlesForButtons.playString || sender.title  == TitlesForButtons.pauseString ){
             switch self.player.playbackState {
             case .stopped:
+                self.player.prepareToPlay()
+                self.player.play()
                 self.player.pause()
                 self.player.currentPlaybackTime = Double(self.startTimeSlider.value)*self.trackTime
                 print ("start time = \(self.player.currentPlaybackTime) " )
                 print ("slider value = \(self.startTimeSlider.value) ")
+                print ("player playback time = \(self.player.currentPlaybackTime) ")
                 self.player.play()
                 sender.title  = TitlesForButtons.pauseString
             case .playing:
@@ -388,6 +391,12 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
     
     @IBAction func chooseMusic(_ sender: UIBarButtonItem) {
+        self.player.stop()
+        self.playPauseButton.title  = TitlesForButtons.playString
+        self.trackStartLabel.title = "Track Start Time: 0:00"
+        self.startTimeSlider.value = 0.0
+        self.trackInfoLabel.title =  " "
+        self.trackLengthLabel.title = "TrackLength:0.00"
         presentPicker(sender)
     }
 }

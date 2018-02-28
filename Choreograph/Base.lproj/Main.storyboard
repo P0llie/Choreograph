@@ -24,44 +24,40 @@
                         <slider key="tableHeaderView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="1Ol-AH-UEN">
                             <rect key="frame" x="0.0" y="0.0" width="1112" height="31"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="thumbTintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="thumbTintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="chooseStartPosition:" destination="VTX-5D-4x5" eventType="valueChanged" id="PRh-tR-XiQ"/>
                             </connections>
                         </slider>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="E7r-9j-bn2">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.90000000000000002" contentMode="scaleToFill" barStyle="black" id="E7r-9j-bn2">
                             <rect key="frame" x="0.0" y="103" width="1112" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
-                                <barButtonItem title="Music" id="6LO-57-VaH">
-                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <barButtonItem title="Choose Music" id="6LO-57-VaH">
+                                    <color key="tintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <connections>
                                         <action selector="chooseMusic:" destination="VTX-5D-4x5" id="4UD-6c-VY7"/>
                                     </connections>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="kXp-u1-ZQs"/>
-                                <barButtonItem tag="2" title="▶️" id="MPD-5h-z6w">
-                                    <color key="tintColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <barButtonItem tag="1" title="▶️" style="plain" id="MPD-5h-z6w">
+                                    <inset key="largeContentSizeImageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                                    <color key="tintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <connections>
                                         <action selector="startMusic:" destination="VTX-5D-4x5" id="vTH-BR-B0h"/>
                                     </connections>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="o5u-IJ-4OW"/>
-                                <barButtonItem title="⏹" id="Fcw-IB-3r1">
-                                    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <connections>
-                                        <action selector="startMusic:" destination="VTX-5D-4x5" id="Aur-C0-JP1"/>
-                                    </connections>
-                                </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="tSd-lW-1dd"/>
                                 <barButtonItem title="Track Title" id="TJz-YP-lwc">
-                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="tintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="CrI-iB-0jq"/>
                                 <barButtonItem title="TrackTime:0.00" id="fub-Xq-bGd">
-                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="tintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </barButtonItem>
                             </items>
+                            <color key="barTintColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <outlet property="delegate" destination="VTX-5D-4x5" id="PYJ-vO-mLH"/>
                             </connections>
@@ -74,22 +70,22 @@
                                     <rect key="frame" x="0.0" y="0.0" width="1112" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ojx-ou-4V3">
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="18" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ojx-ou-4V3">
                                             <rect key="frame" x="20" y="0.0" width="100" height="44"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="100" id="qUW-ti-7p9"/>
                                             </constraints>
                                             <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="numbersAndPunctuation"/>
                                             <connections>
                                                 <outlet property="delegate" destination="VTX-5D-4x5" id="dfh-Vq-qRX"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="m5K-AZ-dPa">
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="18" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="m5K-AZ-dPa">
                                             <rect key="frame" x="121" y="0.0" width="1033" height="44"/>
                                             <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
                                             <connections>
                                                 <outlet property="delegate" destination="VTX-5D-4x5" id="lC8-Fn-RiO"/>
@@ -122,6 +118,7 @@
                         <nil key="title"/>
                         <leftBarButtonItems>
                             <barButtonItem systemItem="done" id="YZS-fl-FQv">
+                                <color key="tintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="close:" destination="VTX-5D-4x5" id="gfH-ty-cs6"/>
                                 </connections>
@@ -132,10 +129,10 @@
                         </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="edit" id="33C-qE-MgZ">
-                                <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="tintColor" red="0.0048598507420000003" green="0.096086271109999996" blue="0.57499289509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </barButtonItem>
                             <barButtonItem title=" Print" id="2dV-dn-LXx">
-                                <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <segue destination="hpk-dB-mig" kind="presentation" identifier="PrintFile" id="Fgo-55-iqG"/>
                                 </connections>
@@ -153,7 +150,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gac-eh-gcS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-756" y="-2420"/>
+            <point key="canvasLocation" x="-756" y="-2686"/>
         </scene>
         <!--Print View Controller-->
         <scene sceneID="5sq-bZ-3yo">
@@ -242,7 +239,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hpk-dB-mig" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="AKW-tG-C5G">
-                        <rect key="frame" x="0.0" y="20" width="834" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="1112" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
