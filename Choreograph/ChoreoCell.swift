@@ -25,10 +25,13 @@ class ChoreoCell: UITableViewCell, UITextFieldDelegate {
             stepText.text = inputText
         }
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        inputText = textField.text
-        textField.resignFirstResponder()
+    // MARK: Disable automatic keyboard dismissal
+     var disablesAutomaticKeyboardDismissal: Bool {
         return true
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        inputText = textField.text
+//                                                                                                                                                                                                       textField.resignFirstResponder()
+        return false
     }
 }

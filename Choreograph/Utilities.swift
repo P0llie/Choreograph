@@ -28,3 +28,15 @@ extension UIView {
         return image
     }
 }
+extension String {
+        func attributedString(withTextStyle style: UIFontTextStyle, ofSize size: CGFloat) -> NSAttributedString {
+            let font = UIFont.preferredFont(forTextStyle: style).withSize(size)
+            return NSAttributedString(string: self, attributes: [.font:font])
+        }
+}
+    
+extension NSMutableAttributedString {
+        func setFont(_ newValue: UIFont?) {
+            if newValue != nil { addAttributes([.font:newValue!], range: NSMakeRange(0, length)) }
+        }
+}

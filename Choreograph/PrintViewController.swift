@@ -10,21 +10,25 @@ import UIKit
 
 class PrintViewController: UIViewController, UITextViewDelegate {
     var fileText: NSMutableAttributedString?
+    var keyboardShowing = false
     
     override func viewDidLoad() {
+                // Do any additional setup after loading the view.
         super.viewDidLoad()
         self.choreographyText.attributedText = fileText
         self.choreographyText.adjustsFontForContentSizeCategory = true
-
-        // Do any additional setup after loading the view.
+        self.choreographyText.isEditable = false
+        self.choreographyText.isScrollEnabled = true
     }
+    
+
 
     @IBOutlet weak var choreographyText: UITextView! {
         didSet{
             choreographyText.sizeToFit()
-            choreographyText.isEditable = true
         }
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -36,8 +40,8 @@ class PrintViewController: UIViewController, UITextViewDelegate {
     
         // 2
         let printInfo = UIPrintInfo(dictionary:nil)
-        printInfo.outputType = UIPrintInfoOutputType.general
-        printInfo.jobName = "print Job"
+        printInfo.outputType = UIPrintInfoOutputType.grayscale
+        printInfo.jobName = "Choregraph print Job"
         printController.printInfo = printInfo
         
         // 3
@@ -46,18 +50,11 @@ class PrintViewController: UIViewController, UITextViewDelegate {
         printController.printFormatter = formatter
         
         // 4
-        printController.present(animated: true, completionHandler: nil)
+        func completionHandler( printController: UIPrintInteractionController, completed: Bool, error: NSError?){
+            if(!completed && error != nil ) {
+                print("Printing not completed because of error: \(error!)")
+            }
+        }
+        printController.present(from: sender, animated: true, completionHandler: completionHandler as? UIPrintInteractionCompletionHandler)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

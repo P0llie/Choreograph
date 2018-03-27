@@ -11,7 +11,7 @@ import AVFoundation
 import AVKit
 import MediaPlayer
 
-class DocumentViewController: UITableViewController ,MPMediaPickerControllerDelegate, UITextFieldDelegate {
+class DocumentViewController: UITableViewController,MPMediaPickerControllerDelegate, UITextFieldDelegate {
 // MARK properties for choreography file handling
     var documentURL: URL?
     var danceDoc: ChoreographyDocument?
@@ -26,6 +26,11 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
     var myIndexPathRow: NSInteger?
     var myCell: ChoreoCell!
+    // MARK: Disable automatic keyboard dismissal
+    override var disablesAutomaticKeyboardDismissal: Bool {
+        return true
+    }
+    
         // MARK: View Controller Lifecycle
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,13 +38,11 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         // open the chosen file
         danceDoc?.open { success in
             if success {
-                print ("opened document \(String(describing: self.danceDoc?.localizedName))")
-                print ("no. of elements in doc array = \(String(describing: self.danceDoc?.choreography.count))")
                 self.choreography = (self.danceDoc?.choreography)!
                 self.title = self.danceDoc?.localizedName
             } else  {
                 print("Error opening a file")
-                dump(DocumentViewController.self)
+//***put in message to user!!!!
                 fatalError()
             }
         }
@@ -48,16 +51,21 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
         
+    
+        
         checkForMusicLibraryAccess()
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 500
-        self.navigationItem.rightBarButtonItem = self.editButtonItem
 
+        tableView.rowHeight = 50
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+    // set up a timer
+        
+        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.timerFired), userInfo: nil, repeats: true)
+        self.timer?.tolerance = 0.05
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-
     }
     
 // MARK: Constants
@@ -67,12 +75,15 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         static let InitialRows = 10
     }
     private struct TitlesForButtons {
-    static let stopCharacter: [Character] = ["⏹"]
-    static let stopString = String(stopCharacter)
+//        static let font = UIFont.preferredFont(forTextStyle: .headline).withSize(20.0)
         static let playCharacter: [Character] = ["▶️"]
         static let playString = String(playCharacter)
+//        static let playString: NSAttributedString = pString.attributedString(withTextStyle: .headline, ofSize: 24.0)
         static let pauseCharacter: [Character] = ["⏸"]
         static let pauseString = String(pauseCharacter)
+        static let musicCharacter: [Character] = ["🎵"]
+        static let musicString = String(musicCharacter)
+        
     }
 
 // MARK: UITableViewDataSource
@@ -92,7 +103,6 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell( withIdentifier:Storyboard.CellIdentifier, for: indexPath) as? ChoreoCell
         if (self.choreography.count == 0 ) {
-            
             let myCountSteps = CountSteps(counts:" ", steps:" " )
             for _ in 0...Storyboard.InitialRows-1 {
                 self.choreography.append(myCountSteps)
@@ -117,27 +127,20 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         tableView.endEditing(true)
         if editingStyle == .insert {
-            
-            
             let myCountSteps = CountSteps(counts:" ", steps:" " )
             self.choreography.append(myCountSteps)
             self.danceDoc?.choreography.append(myCountSteps)
             self.danceDoc?.updateChangeCount(.done)
-
         }
         if editingStyle == .delete {
             self.choreography.remove(at: indexPath.row)
             self.danceDoc?.choreography.remove(at: indexPath.row)
             self.danceDoc?.updateChangeCount(.done)
-            
             tableView.beginUpdates()
-            
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-            
             tableView.endUpdates()
         }
-
     }
 // UITableView delegate
     
@@ -149,10 +152,8 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Counts\t\tSteps"
     }
-
     
 // Mark ChoreoCell data entry by the user
-
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard var txt : String = textField.text else {
@@ -171,7 +172,6 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
             self.choreography[ip.row] = myCountSteps
         case cell.stepText:
             let myCountSteps = CountSteps(counts:cell.countText.text!, steps:txt )
-            
             self.choreography[ip.row] = myCountSteps
         default:
             print ("Unexpected textField case")
@@ -185,9 +185,8 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     
      func saveEdits(_ sender: UIBarButtonItem? = nil) {
         func reportSuccess(_ success:Bool) {
-            if success {
-                print ("writing to the file was successful")
-            } else {
+            if !success {
+                
                 print ("writing to the file was UNsuccessful")
             }
         }
@@ -196,12 +195,19 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
 // MARK Dismiss the currently chosen file and save it
     
-    
     @IBAction func close(_ sender: UIBarButtonItem) {
         if danceDoc?.choreography != nil {
            danceDoc?.thumbnail = self.view.snapshot
         }
         saveEdits()
+        // tidy up music player, etc
+        self.player.stop()
+        self.playPauseButton.title  = TitlesForButtons.playString
+        self.trackStartLabel.title = " 0:00"
+        self.startTimeSlider.value = 0.0
+        self.trackInfoLabel.title =  " "
+        self.trackLengthLabel.title = "Track Length: 0.00"
+        self.timer?.invalidate()
         dismiss(animated: true) {
             self.danceDoc?.close()
         }
@@ -214,9 +220,8 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     var trackTime = 0.0
     var startTime = 0.0
     var mediaItemCollection:MPMediaItemCollection? = nil
-    let player = MPMusicPlayerController.applicationQueuePlayer
-    private weak var timer: Timer?
-    
+    let player = MPMusicPlayerController.applicationMusicPlayer
+    weak var timer: Timer?
     
 // MARK Outlets
     
@@ -232,10 +237,7 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     }
 // MARK: unwind from the print view controller
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
-        let previousvc = unwindSegue.destination
-        if let choreographyvc = previousvc as? DocumentViewController {
-            choreographyvc.danceDoc?.save(to: choreographyvc.documentURL!, for: .forOverwriting, completionHandler: nil)
-        }
+        
     }
 // MARK: Prepare for printing to an Airprint printer
      // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -247,43 +249,26 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     if let navcon = destinationvc as? UINavigationController {
         destinationvc = navcon.visibleViewController ?? destinationvc
     }
-        let danceText: String = self.navigationItem.title! + "\n Counts \t Steps \n"
+        let danceText: String = self.navigationItem.title! + "\n Counts \tSteps \n"
         let myTitle: UIFont = .preferredFont(forTextStyle: .headline)
-//        let myBody: UIFont = .preferredFont(forTextStyle: .body)
+        let myBody: UIFont = .preferredFont(forTextStyle: .body)
         let content = NSMutableAttributedString(string: danceText, attributes: [NSAttributedStringKey.font: myTitle] )
         let pStyle1 = NSMutableParagraphStyle()
-        pStyle1.headIndent = 10
         pStyle1.firstLineHeadIndent = 10
+        pStyle1.headIndent = 80
         pStyle1.alignment = .left
         pStyle1.paragraphSpacing = 5
         pStyle1.tabStops = []
         let tab1 = NSTextTab(textAlignment: .left, location: 80 )
-        let tab2 = NSTextTab(textAlignment: .left, location: 90 )
-    
         pStyle1.tabStops.append(tab1)
-        pStyle1.tabStops.append(tab2)
         content.addAttribute(NSAttributedStringKey.paragraphStyle, value: pStyle1, range: NSMakeRange(0,1))
-
-        let pStyle2 = NSMutableParagraphStyle()
-        pStyle2.headIndent = 80
-        pStyle2.firstLineHeadIndent = 80
-        pStyle2.alignment = .right
-        pStyle2.tabStops = []
-        pStyle2.tabStops.append(tab1)
-        pStyle2.tabStops.append(tab2)
-
         for i in 0...self.choreography.count-1 {
             let countsteps = self.choreography[i]
-//            let content1 = NSMutableAttributedString(string: countsteps.counts, attributes:[ NSAttributedStringKey.font: myBody])
-            let content1 = NSMutableAttributedString(string: countsteps.counts)
-            content1.addAttribute(NSAttributedStringKey.paragraphStyle, value: pStyle1, range: NSMakeRange(0,1))
+            let content1 = NSMutableAttributedString(string: countsteps.counts, attributes:[ NSAttributedStringKey.font: myBody, NSAttributedStringKey.paragraphStyle: pStyle1])
             content.append(content1)
-//            let content2 = NSMutableAttributedString(string: "\t" + countsteps.steps + "\n" , attributes:[ NSAttributedStringKey.font: myBody])
-            let content2 = NSMutableAttributedString(string: "\t" + countsteps.steps + "\n")
-            content2.addAttribute(NSAttributedStringKey.paragraphStyle, value: pStyle2, range: NSMakeRange(0,1))
+            let content2 = NSMutableAttributedString(string: "\t" + countsteps.steps + "\n" , attributes:[ NSAttributedStringKey.font: myBody, NSAttributedStringKey.paragraphStyle: pStyle1])
             content.append(content2)
-        }
-        
+        }        
     if let printvc = destinationvc as? PrintViewController {
         if  segue.identifier == "PrintFile"{
             printvc.fileText = content
@@ -312,34 +297,38 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
             break
         }
     }
-    func presentPicker (_ sender: Any){
-        let picker = MPMediaPickerController(mediaTypes: .music)
-        picker.delegate = self
-        picker.allowsPickingMultipleItems = false
-        picker.showsCloudItems = false
-        self.present(picker, animated: true)
-    }
     
     func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
         let myItem =  mediaItemCollection.items[0]
         if let title = myItem.title {
             self.myLabelText = title
-        }else {self.myLabelText = "" }
-/*        if let artist = myItem.artist {
-            self.myLabelText = self.myLabelText + ":" + artist
-        } */
+        }else {self.myLabelText = "Untitled" }
         self.trackInfoLabel.title = self.myLabelText
         let url = myItem.assetURL!
         self.myURL = url
         self.trackTime = myItem.playbackDuration
-        let timeLabel = "TrackLength:"
+        let timeLabel = "Track Length:"
         self.trackLengthLabel.title = convertSeceondsToMinutes(myItem.playbackDuration, label: timeLabel)
         self.mediaItemCollection = mediaItemCollection
         self.player.setQueue(with:self.mediaItemCollection!)
-        self.player.repeatMode = .one
+        self.player.repeatMode = .one  //automatically repeat
         self.player.stop()
         self.dismiss(animated: true)
     }
+
+    @objc func timerFired(_: Any) {
+        let player = MPMusicPlayerController.applicationMusicPlayer
+        guard let item = player.nowPlayingItem, player.playbackState != .stopped else {
+            return
+        }
+        let current = player.currentPlaybackTime
+        let total = item.playbackDuration
+//        let timeLeft = total - current
+        self.startTimeSlider.value = Float(current/total)
+//        self.trackLengthLabel.title = convertSeceondsToMinutes(timeLeft, label: " ")
+        self.trackStartLabel.title = convertSeceondsToMinutes(current, label: " ")
+    }
+    
     func convertSeceondsToMinutes(_ time: (Double), label: (String)) ->  String?{
         let minutes = String( format: "%d",Int(time/60.0))
         let newTime = Int(time) - Int(time/60.0)*60
@@ -357,8 +346,10 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
         self.player.pause()
         self.playPauseButton.title = TitlesForButtons.pauseString
         self.player.currentPlaybackTime = Double(self.startTimeSlider.value)*self.trackTime
-        let startLabel = "Track Start Time: "
+        let startLabel = " "
         self.trackStartLabel.title = convertSeceondsToMinutes(self.player.currentPlaybackTime, label: startLabel)
+//        let timeLeft = self.trackTime - self.player.currentPlaybackTime
+//        self.trackLengthLabel.title = convertSeceondsToMinutes(timeLeft, label: " ")
         self.playPauseButton.title = TitlesForButtons.playString
     }
 // MARK bar button actions
@@ -367,12 +358,6 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
             switch self.player.playbackState {
             case .stopped:
                 self.player.prepareToPlay()
-                self.player.play()
-                self.player.pause()
-                self.player.currentPlaybackTime = Double(self.startTimeSlider.value)*self.trackTime
-                print ("start time = \(self.player.currentPlaybackTime) " )
-                print ("slider value = \(self.startTimeSlider.value) ")
-                print ("player playback time = \(self.player.currentPlaybackTime) ")
                 self.player.play()
                 sender.title  = TitlesForButtons.pauseString
             case .playing:
@@ -393,11 +378,15 @@ class DocumentViewController: UITableViewController ,MPMediaPickerControllerDele
     @IBAction func chooseMusic(_ sender: UIBarButtonItem) {
         self.player.stop()
         self.playPauseButton.title  = TitlesForButtons.playString
-        self.trackStartLabel.title = "Track Start Time: 0:00"
-        self.startTimeSlider.value = 0.0
+        self.trackStartLabel.title = " 0:00"
+        self.startTimeSlider.setValue(Float(0.0), animated: true)
         self.trackInfoLabel.title =  " "
-        self.trackLengthLabel.title = "TrackLength:0.00"
-        presentPicker(sender)
+        self.trackLengthLabel.title = "Track Length:0.00"
+        let picker = MPMediaPickerController(mediaTypes: .music)
+        picker.delegate = self
+        picker.allowsPickingMultipleItems = false
+        picker.showsCloudItems = false
+        self.present(picker, animated: true)
     }
 }
 
